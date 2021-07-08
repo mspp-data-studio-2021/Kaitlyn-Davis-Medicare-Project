@@ -14,3 +14,14 @@ blackmenwomen <- filter(blackmenwomen, state == "NORTH CAROLINA")
 ##check to make sure it worked
 blackmenwomen$state
 
+##load dataset
+library(readr)
+whitemenwomen <- read_csv("white_men_and_women.csv")
+
+install.packages("ggplot2")
+
+data <- data.frame(race = blackmenwomen$primary_value)
+
+##two data visualizations - still need to look at certain counties and filter
+ggplot(data = blackmenwomen, aes(x = county, y = primary_value))
+ggplot(data = whitemenwomen, aes(x = county, y = primary_value))
