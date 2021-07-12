@@ -1,27 +1,52 @@
-## load in the dataset
-allracessexes <- read_csv("2019_all_races_and_sexes.csv")
+##load in dataset that is filtered to just include black people
+blackprev <- read_csv("prevalence_black.csv")
 
 ##testing code - looking at observations in a couple of columns
-allracessexes$geography
-allracessexes$state
-
-##load in another dataset that is filtered to just include black people
-blackmenwomen <- read_csv("black_men_and_women.csv")
+blackprev$geography
+blackprev$state
 
 ##filter state column to only inlcude NC - must create new df for it to save
-blackmenwomen <- filter(blackmenwomen, state == "NORTH CAROLINA")
+blackprevnc <- filter(blackprev, state == "NORTH CAROLINA")
 
 ##check to make sure it worked
-blackmenwomen$state
+blackprevnc$state
 
-##load dataset
+##load datasets
 library(readr)
-whitemenwomen <- read_csv("white_men_and_women.csv")
+whiteprev <- read_csv("prevalence_white.csv")
+nativeprev <- read_csv("prevalence_nativeamerican.csv")
+
+whiteprevnc <- filter(whiteprev, state == "NORTH CAROLINA")
+nativeprevnc <- filter(nativeprev, state == "NORTH CAROLINA")
 
 install.packages("ggplot2")
 
-data <- data.frame(race = blackmenwomen$primary_value)
+data <- data.frame(race = blackprevnc$primary_value)
 
 ##two data visualizations - still need to look at certain counties and filter
-ggplot(data = blackmenwomen, aes(x = county, y = primary_value))
-ggplot(data = whitemenwomen, aes(x = county, y = primary_value))
+ggplot(data = blackprevnc, aes(x = urban, y = analysis_value)) + geom_bar(stat="identity")
+ggplot(data = whiteprev, aes(x = county, y = primary_value))
+
+##merge datasets
+library(tidyverse)
+blackwhitenativeprev <- bind_rows(blackprevnc, whiteprevnc, nativeprevnc)
+
+----------------
+##7/12
+
+##load
+whiteprev <- read_csv("white_prevalence_state.csv")
+blackprev <- read_csv("black_prevalence_state.csv")
+
+##filter
+whiteprevnc <- filter(whiteprev, state == "NORTH CAROLINA")
+blackprevnc <- filter(blackprev, state == "NORTH CAROLINA")
+
+##bind rows together
+blackwhiteprev <- bind_rows(blackprevnc, whiteprevnc)
+
+##graph
+ggplot(data = blackwhiteprev, aes(x = primary_race, y = analysis_value)) + geom_bar(stat="identity", fill="steelblue") + ggtitle("Percentage of Diabetic North Carolinian Medicare Recipients by Race") + xlab("Race") + ylab("Percentage") + geom_text(aes(label=analysis_value), vjust=1.6, color="black")
+
+##number of nc counties urban and rural
+ggplot(data = blackwhiteprev, aes(x = urban, y = analysis_value)) + geom_bar(stat+"identity", fill="steelblue") + ggtitle("Percentage of Diabetic North Carolinian Medicare Recipients by )
